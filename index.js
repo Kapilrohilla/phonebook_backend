@@ -60,6 +60,22 @@ app.delete('/api/persons/:id', (req, res) => {
         res.send('person data deleted');
     }
 })
+app.post('/api/persons', (req, res) => {
+    const body = req.body;
+    if (!body) {
+        res.end("body not detected");
+    }
+    console.log(req.headers);
+    const note = {
+        id: Math.random() * 10000,
+        name: body.name,
+        number: body.number
+    }
+    console.log(note);
+    data = data.concat(note);
+    res.status(200).json(data);
+})
+
 app.listen(PORT, () => {
     console.log(`listning at post:${PORT}`);
 })
