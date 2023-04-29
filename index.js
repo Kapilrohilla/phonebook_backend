@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const PORT = 3001;
 
-const data = [
+let data = [
     {
         "id": 1,
         "name": "Arto Hellas",
@@ -44,6 +44,22 @@ app.get('/info', (req, res) => {
     res.send(`<p>Phonebook has info of ${data.length} people</p><p>${Date()}</p>`)
 });
 
+app.delete('/api/persons/:id', (req, res) => {
+    const id = req.params.id;
+    const cnfrmId = data.filter(obj => {
+        return obj.id === Number(id);
+    })
+    data = data.filter(obj => {
+        return obj.id !== Number.parseInt(id)
+    });
+    if (!cnfrmId.length > 0) {
+        res.send("person not found");
+    } else {
+        console.info("person data deleted");
+        res.status(204);
+        res.send('person data deleted');
+    }
+})
 app.listen(PORT, () => {
     console.log(`listning at post:${PORT}`);
 })
