@@ -28,6 +28,17 @@ const data = [
 app.get('/api/persons', (req, res) => {
     res.json(data);
 })
+
+app.get('/api/persons/:id', (req, res) => {
+    const id = req.params.id;
+    const person = data.filter(obj => obj.id === Number.parseInt(id));
+    if (!person.length > 0) {
+        res.status(404).send(`<p>person with id ${id} not found</p>`);
+    } else {
+        res.send(person);
+    }
+})
+
 app.get('/info', (req, res) => {
     res.header({ "Content-type": "text/html" });
     res.send(`<p>Phonebook has info of ${data.length} people</p><p>${Date()}</p>`)
