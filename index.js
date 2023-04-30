@@ -66,15 +66,27 @@ app.post('/api/persons', (req, res) => {
     if (!body) {
         res.end("body not detected");
     }
-
-    const note = {
-        id: Math.floor(Math.random() * 10000),
-        name: body.name,
-        number: body.number
+    const alreadyPerson = data.filter(person => person.name === body.name);
+    if (alreadyPerson.length > 0) {
+        return res.status(400).json({
+            "error": "name or number must be unique"
+        })
     }
+    if (!body.name || !body.number) {
+        console.log("name or number is missing");
+        return res.status(400).json({
+            "content": "name or number is missing"
+        });
+    } else {
+        const note = {
+            id: Math.floor(Math.random() * 10000),
+            name: body.name,
+            number: body.number
+        }
 
-    data = data.concat(note);
-    res.status(200).json(data);
+        data = data.concat(note);
+        res.json(note);
+    }
 })
 
 app.listen(PORT, () => {
