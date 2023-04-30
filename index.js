@@ -3,8 +3,13 @@ const morgan = require('morgan');
 const app = express();
 const PORT = 3001;
 app.use(express.json());
-const morganforGet = ':method :url :status :res[content-length] - :response-time ms';
-app.use(morgan(morganforGet));
+// const morganForGet = ':method :url :status :res[content-length] - :response-time ms';
+// app.use(morgan(morganForGet));
+morgan.token('body', function (req, res) {
+    return JSON.stringify(req.body);
+})
+const morganForPost = ':method :url :status :res[content-length] - :response-time ms :body';
+app.use(morgan(morganForPost));
 let data = [
     {
         "id": 1,
