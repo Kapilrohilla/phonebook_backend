@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const PORT = 3001;
+app.use(express.json());
 
 let data = [
     {
@@ -65,13 +66,13 @@ app.post('/api/persons', (req, res) => {
     if (!body) {
         res.end("body not detected");
     }
-    console.log(req.headers);
+
     const note = {
-        id: Math.random() * 10000,
+        id: Math.floor(Math.random() * 10000),
         name: body.name,
         number: body.number
     }
-    console.log(note);
+
     data = data.concat(note);
     res.status(200).json(data);
 })
