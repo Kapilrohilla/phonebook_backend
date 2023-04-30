@@ -1,8 +1,10 @@
 const express = require('express');
+const morgan = require('morgan');
 const app = express();
 const PORT = 3001;
 app.use(express.json());
-
+const morganforGet = ':method :url :status :res[content-length] - :response-time ms';
+app.use(morgan(morganforGet));
 let data = [
     {
         "id": 1,
@@ -27,7 +29,7 @@ let data = [
 ]
 
 app.get('/api/persons', (req, res) => {
-    res.json(data);
+    res.status(200).json(data);
 })
 
 app.get('/api/persons/:id', (req, res) => {
