@@ -4,12 +4,13 @@ const url = process.env.MONGODB_URI;
 mongoose.connect(url).then(r => {
     console.log("connected to Mongodb " + url);
 }).catch(err => {
-    console.log('failed to connect Mongodb : ' + url);
+    console.log(err);
 })
 
 const contactSchema = mongoose.Schema({
     name: String,
-    number: String
+    number: Number,
+    id: Number
 })
 const Person = mongoose.model('Person', contactSchema);
 
@@ -25,11 +26,6 @@ mongoose.set('toJSON', {
 
 // const name = process.argv[2];
 // const num = process.argv[3];
-
-// const contact = new Person({
-//     name: name,
-//     number: num
-// })
 
 // if ((name && num) === undefined) {
 //     console.log("phonebook: ");

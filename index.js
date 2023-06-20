@@ -18,28 +18,28 @@ morgan.token('body', function (req, res) {
 const morganForPost = ':method :url :status :res[content-length] - :response-time ms :body';
 app.use(morgan(morganForPost));
 
-let data = [
-    {
-        "id": 1,
-        "name": "Arto Hellas",
-        "number": "040-123456"
-    },
-    {
-        "id": 2,
-        "name": "Ada Lovelace",
-        "number": "39-44-5323523"
-    },
-    {
-        "id": 3,
-        "name": "Dan Abramov",
-        "number": "12-43-234345"
-    },
-    {
-        "id": 4,
-        "name": "Mary Poppendieck",
-        "number": "39-23-6423122"
-    }
-]
+// let data = [
+//     {
+//         "id": 1,
+//         "name": "Arto Hellas",
+//         "number": "040-123456"
+//     },
+//     {
+//         "id": 2,
+//         "name": "Ada Lovelace",
+//         "number": "39-44-5323523"
+//     },
+//     {
+//         "id": 3,
+//         "name": "Dan Abramov",
+//         "number": "12-43-234345"
+//     },
+//     {
+//         "id": 4,
+//         "name": "Mary Poppendieck",
+//         "number": "39-23-6423122"
+//     }
+// ]
 
 app.get('/api/persons', (req, res) => {
     // res.status(200).json(data);
@@ -82,30 +82,38 @@ app.delete('/api/persons/:id', (req, res) => {
 })
 app.post('/api/persons', (req, res) => {
     const body = req.body;
-    if (!body) {
+    if (!body)
         res.end("body not detected");
-    }
-    const alreadyPerson = data.filter(person => person.name === body.name);
-    if (alreadyPerson.length > 0) {
-        return res.status(400).json({
-            "error": "name or number must be unique"
-        })
-    }
-    if (!body.name || !body.number) {
-        console.log("name or number is missing");
-        return res.status(400).json({
-            "content": "name or number is missing"
-        });
-    } else {
-        const note = {
-            id: Math.floor(Math.random() * 10000),
-            name: body.name,
-            number: body.number
-        }
 
-        data = data.concat(note);
-        res.json(note);
-    }
+    const newContact = new Person({
+        name: body.name,
+        number: body.number,
+        id: Math.floor(Math.random() * 1000)
+    })
+    newContact.save().then(r => {
+        console.log("contact saved");
+    })
+    // const alreadyPerson = data.filter(person => person.name === body.name);
+    // if (alreadyPerson.length > 0) {
+    //     return res.status(400).json({
+    //         "error": "name or number must be unique"
+    //     })
+    // }
+    // if (!body.name || !body.number) {
+    //     console.log("name or number is missing");
+    //     return res.status(400).json({
+    //         "content": "name or number is missing"
+    //     });
+    // } else {
+    //     const note = {
+    //         id: Math.floor(Math.random() * 10000),
+    //         name: body.name,
+    //         number: body.number
+    //     }
+
+    // data = data.concat(note);
+    res.end();
+    // res.json(newContact);
 })
 
 const PORT = process.env.PORT || 3001;
