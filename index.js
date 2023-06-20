@@ -1,19 +1,23 @@
 const express = require('express');
 const cors = require('cors');
+require('dotenv').config();
 const morgan = require('morgan');
+const Person = require('./models/mongo');
 const app = express();
-const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
 app.use(express.static('build'));
+
 // const morganForGet = ':method :url :status :res[content-length] - :response-time ms';
 // app.use(morgan(morganForGet));
+
 morgan.token('body', function (req, res) {
     return JSON.stringify(req.body);
 })
 const morganForPost = ':method :url :status :res[content-length] - :response-time ms :body';
 app.use(morgan(morganForPost));
+
 let data = [
     {
         "id": 1,
@@ -38,7 +42,10 @@ let data = [
 ]
 
 app.get('/api/persons', (req, res) => {
-    res.status(200).json(data);
+    // res.status(200).json(data);
+    Person.find({}).then(r => {
+        res.status(200).json(r);
+    })
 })
 
 app.get('/api/persons/:id', (req, res) => {
@@ -61,6 +68,7 @@ app.delete('/api/persons/:id', (req, res) => {
     const cnfrmId = data.filter(obj => {
         return obj.id === Number(id);
     })
+
     data = data.filter(obj => {
         return obj.id !== Number.parseInt(id)
     });
@@ -99,6 +107,8 @@ app.post('/api/persons', (req, res) => {
         res.json(note);
     }
 })
+
+const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
     console.log(`listning at post:${PORT}`);
