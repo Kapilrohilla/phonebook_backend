@@ -50,12 +50,20 @@ app.get('/api/persons', (req, res) => {
 
 app.get('/api/persons/:id', (req, res) => {
     const id = req.params.id;
-    const person = data.filter(obj => obj.id === Number.parseInt(id));
-    if (!person.length > 0) {
-        res.status(404).send(`<p>person with id ${id} not found</p>`);
-    } else {
-        res.send(person);
-    }
+    // const person = data.filter(obj => obj.id === Number.parseInt(id));
+    // if (!person.length > 0) {
+    //     res.status(404).send(`<p>person with id ${id} not found</p>`);
+    // } else {
+    //     res.send(person);
+    // }
+    Person.findById(id).then(aContact => {
+        res.status(200).json(aContact);
+    }).catch(r => {
+        console.log('unable to find the database');
+    }).catch(err => {
+        console.log(err);
+        res.status(500).end();
+    })
 })
 
 app.get('/info', (req, res) => {
@@ -87,8 +95,7 @@ app.post('/api/persons', (req, res) => {
 
     const newContact = new Person({
         name: body.name,
-        number: body.number,
-        id: Math.floor(Math.random() * 1000)
+        number: body.number
     })
     newContact.save().then(r => {
         console.log("contact saved");

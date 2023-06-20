@@ -9,8 +9,7 @@ mongoose.connect(url).then(r => {
 
 const contactSchema = mongoose.Schema({
     name: String,
-    number: Number,
-    id: Number
+    number: Number
 })
 const Person = mongoose.model('Person', contactSchema);
 
