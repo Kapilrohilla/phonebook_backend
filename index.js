@@ -67,6 +67,18 @@ app.post('/api/persons', (req, res) => {
         console.log("contact saved");
     })
     res.end();
+});
+
+app.put('/api/persons/:id', (req, res, next) => {
+    const body = req.body;
+    const updatedContact = {
+        name: body.name,
+        number: Number.parseInt(body.number)
+    }
+    Person.findByIdAndUpdate(req.params.id, updatedContact, { new: true })
+        .then(r => res.json(updatedContact))
+        .catch(err => next(err));
+
 })
 app.use(errorHandler);
 
