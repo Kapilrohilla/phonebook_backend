@@ -8,15 +8,19 @@ mongoose.connect(url).then(r => {
 })
 
 const contactSchema = mongoose.Schema({
-    name: String,
+    name: {
+        type: String,
+        minLength: 3
+    },
     number: Number
 })
 const Person = mongoose.model('Person', contactSchema);
 
 mongoose.set('toJSON', {
     transform: (document, returnedObject) => {
-        returnedObject.id = returnedObject._id.toString();
+        returnedObject["id"] = returnedObject._id.toString();
         delete returnedObject._id;
+        delete returnedObject.__v;
     }
 })
 

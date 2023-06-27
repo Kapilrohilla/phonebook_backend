@@ -19,6 +19,8 @@ const errorHandler = (err, req, res, next) => {
     console.log(err);
     if (err.name === "CastError") {
         return res.status(400).send({ error: "malformatted id" });
+    } else if (err.name === "ValidationError") {
+        return res.status(400).send({ error: err.message });
     }
     next(err);
 }
@@ -54,10 +56,11 @@ app.delete('/api/persons/:id', (req, res, next) => {
         }).catch(err => next(err))
 })
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
     const body = req.body;
-    if (!body)
-        res.end("body not detected");
+
+    if (Object.keys(body).length < 1)
+        res.status(500).end("body not detected");
 
     const newContact = new Person({
         name: body.name,
@@ -65,8 +68,8 @@ app.post('/api/persons', (req, res) => {
     })
     newContact.save().then(r => {
         console.log("contact saved");
-    })
-    res.end();
+        res.status(200).end();
+    }).catch(err => next(err))
 });
 
 app.put('/api/persons/:id', (req, res, next) => {
